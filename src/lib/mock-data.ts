@@ -681,13 +681,13 @@ export const BANNERS: Banner[] = [
     subtitle_te: 'స్వచ్ఛమైన నెయ్యి భోజనం కేవలం ₹120 నుండి',
     image_url: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=800&auto=format&fit=crop&q=80',
     link_url: '/app/restaurant/rest-3',
-    discount_code: 'MANA10',
+    discount_code: 'PAKKA10',
     sort_order: 3,
   },
 ];
 
 export const COUPONS: Coupon[] = [
-  { id: 'coupon-1', code: 'MANA10', description: '10% off on all Telugu delicacies', discount_type: 'percentage', discount_value: 10, min_order_amount: 150, max_discount: 50, is_active: true },
+  { id: 'coupon-1', code: 'PAKKA10', description: '10% off on all Telugu delicacies', discount_type: 'percentage', discount_value: 10, min_order_amount: 150, max_discount: 50, is_active: true },
   { id: 'coupon-2', code: 'FIRST50', description: 'Flat ₹50 OFF on your first food order', discount_type: 'flat', discount_value: 50, min_order_amount: 100, max_discount: 50, is_active: true },
   { id: 'coupon-3', code: 'BIRYANI20', description: '20% Mega Savings on Dum Biryanis', discount_type: 'percentage', discount_value: 20, min_order_amount: 200, max_discount: 120, is_active: true },
 ];
@@ -695,7 +695,7 @@ export const COUPONS: Coupon[] = [
 export const SAMPLE_ORDERS: Order[] = [
   {
     id: 'order-1',
-    order_code: 'MR-0001',
+    order_code: 'PL-0001',
     user_id: 'demo-customer-001',
     restaurant_id: 'rest-2',
     restaurant_name: 'Hyderabad Biryani House',
@@ -719,7 +719,7 @@ export const SAMPLE_ORDERS: Order[] = [
   },
   {
     id: 'order-2',
-    order_code: 'MR-0002',
+    order_code: 'PL-0002',
     user_id: 'demo-customer-001',
     restaurant_id: 'rest-3',
     restaurant_name: 'Amma Vantillu Homestyle Meals',

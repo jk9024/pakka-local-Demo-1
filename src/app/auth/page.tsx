@@ -117,7 +117,7 @@ export default function AuthPage() {
       }}>
         <img
           src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80"
-          alt="Mana Ruchulu Food"
+          alt="Pakka Local Food"
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.75 }}
         />
         <div style={{
@@ -158,7 +158,7 @@ export default function AuthPage() {
               margin: 0,
               letterSpacing: '-0.02em',
             }}>
-              {locale === 'te' ? 'మన రుచులు' : 'Mana Ruchulu'}
+              {locale === 'te' ? 'పక్కా లోకల్' : 'Pakka Local'}
             </h1>
             <p style={{
               fontSize: '0.82rem',
@@ -166,7 +166,7 @@ export default function AuthPage() {
               fontWeight: 700,
               margin: '2px 0 0',
             }}>
-              {locale === 'te' ? 'ఆంధ్ర & తెలంగాణ రుచికరమైన ఆహారం' : 'Authentic Andhra & Telangana Food Delivery'}
+              {locale === 'te' ? 'పక్కా లోకల్. పక్కా టేస్టీ.' : 'Pakka local. Pakka tasty.'}
             </p>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function AuthPage() {
               </button>
 
               <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.4 }}>
-                By continuing, you agree to Mana Ruchulu's Terms of Service & Privacy Policy.
+                By continuing, you agree to Pakka Local's Terms of Service & Privacy Policy.
               </p>
             </div>
           ) : (

@@ -1,5 +1,5 @@
 -- =============================================================
--- Mana Ruchulu (మన రుచులు) — Complete Database Schema
+-- Pakka Local (పక్కా లోకల్) — Complete Database Schema
 -- Version: 1.0.0 | Phase 1
 -- Run this in your Supabase SQL Editor
 -- =============================================================
@@ -534,7 +534,7 @@ CREATE INDEX idx_payout_ledger_restaurant ON payout_ledger(restaurant_id);
 -- FUNCTIONS
 -- =============================================================
 
--- Generate unique order code like MR-0001
+-- Generate unique order code like PL-0001
 CREATE OR REPLACE FUNCTION generate_order_code()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -543,7 +543,7 @@ BEGIN
   SELECT COALESCE(MAX(CAST(SUBSTRING(order_code FROM 4) AS INTEGER)), 0) + 1
     INTO next_num
     FROM orders;
-  NEW.order_code := 'MR-' || lpad(next_num::text, 4, '0');
+  NEW.order_code := 'PL-' || lpad(next_num::text, 4, '0');
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -913,17 +913,17 @@ INSERT INTO app_settings (key, value, description) VALUES
   ('contact_phone', '+919876543210', 'Platform support phone number'),
   ('referral_reward', '50', 'Referral reward amount in INR'),
   ('min_rider_payout', '500', 'Minimum amount for rider cash deposit'),
-  ('platform_name', 'Mana Ruchulu', 'Platform display name'),
-  ('platform_name_te', 'మన రుచులు', 'Platform display name in Telugu');
+  ('platform_name', 'Pakka Local', 'Platform display name'),
+  ('platform_name_te', 'పక్కా లోకల్', 'Platform display name in Telugu');
 
 -- Banners
 INSERT INTO banners (title, title_te, image_url, link_url, sort_order) VALUES
-  ('Welcome to Mana Ruchulu!', 'మన రుచులుకు స్వాగతం!', '/images/banner-welcome.jpg', '/app', 1),
+  ('Welcome to Pakka Local!', 'పక్కా లోకల్ కు స్వాగతం!', '/images/banner-welcome.jpg', '/app', 1),
   ('Free Delivery on First Order', 'మొదటి ఆర్డర్‌పై ఉచిత డెలివరీ', '/images/banner-free-delivery.jpg', '/app/offers', 2),
   ('Try Our Biryani Specials', 'మా బిర్యానీ స్పెషల్స్ ట్రై చేయండి', '/images/banner-biryani.jpg', '/app', 3);
 
 -- Coupons
 INSERT INTO coupons (code, description, discount_type, discount_value, min_order_amount, max_discount) VALUES
-  ('MANA10', '10% off on your order', 'percentage', 10, 150, 50),
+  ('PAKKA10', '10% off on your order', 'percentage', 10, 150, 50),
   ('FIRST50', '₹50 off on first order', 'flat', 50, 100, 50),
   ('BIRYANI20', '20% off on Biryani orders', 'percentage', 20, 200, 100);

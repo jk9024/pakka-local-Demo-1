@@ -24,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <h1 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#fff' }}>
-                  {locale === 'te' ? 'మన రుచులు అడ్మిన్' : 'Mana Ruchulu Admin'}
+                  {locale === 'te' ? 'పక్కా లోకల్ అడ్మిన్' : 'Pakka Local Admin'}
                 </h1>
                 <span className="badge badge-herb" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
                   OPERATIONS

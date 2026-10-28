@@ -1,9 +1,11 @@
-// Mana Ruchulu Service Worker
-const CACHE_NAME = 'mana-ruchulu-v1.1';
+// Pakka Local Service Worker
+const CACHE_NAME = 'pakka-local-v1.2';
 const PRECACHE_ASSETS = [
   '/',
   '/app',
   '/manifest.json',
+  '/manifest-restaurant.json',
+  '/manifest-rider.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-maskable-512.png',

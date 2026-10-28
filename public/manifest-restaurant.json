@@ -1,0 +1,36 @@
+{
+  "name": "Pakka Local Partner",
+  "short_name": "Pakka Local Partner",
+  "description": "Pakka Local Restaurant Partner Portal — Live orders, menu & kitchen management",
+  "start_url": "/restaurant",
+  "scope": "/restaurant",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#ea580c",
+  "orientation": "portrait",
+  "categories": [
+    "food",
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ if (!fs.existsSync(iconsDir)) {
   fs.mkdirSync(iconsDir, { recursive: true });
 }
 
-// Crisp, premium SVG for Mana Ruchulu
+// Crisp, premium SVG for Pakka Local
 const createSvg = (size, isMaskable = false) => {
   const padding = isMaskable ? Math.round(size * 0.12) : 0;
   const innerSize = size - padding * 2;
@@ -53,9 +53,9 @@ const createSvg = (size, isMaskable = false) => {
       <!-- Front Flame / Spice Emblem -->
       <path d="M256 215 C 275 255, 305 285, 275 325 C 240 345, 225 315, 235 285 C 220 300, 210 320, 230 335 C 210 330, 195 295, 220 265 C 235 245, 245 225, 256 215 Z" fill="#ea580c"/>
 
-      <!-- Text / Brand "MR" Tag -->
-      <text x="256" y="445" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">MANA RUCHULU</text>
-      <text x="256" y="490" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="700" fill="#fed7aa" text-anchor="middle">మన రుచులు</text>
+      <!-- Text / Brand "PL" Tag -->
+      <text x="256" y="445" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">PAKKA LOCAL</text>
+      <text x="256" y="490" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="700" fill="#fed7aa" text-anchor="middle">పక్కా లోకల్</text>
     </g>
   </svg>
   `;

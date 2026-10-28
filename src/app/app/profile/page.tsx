@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [chatMessages, setChatMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: 'Namaste! Welcome to Mana Ruchulu 24x7 Helpdesk. How can we help with your dining or order experience today?',
+      text: 'Namaste! Welcome to Pakka Local 24x7 Helpdesk. How can we help with your dining or order experience today?',
     },
   ]);
 
@@ -353,12 +353,12 @@ export default function ProfilePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/icons/icon-192.png"
-              alt="Mana Ruchulu"
+              alt="Pakka Local"
               style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, boxShadow: '0 2px 8px rgba(234,88,12,0.4)' }}
             />
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#9a3412' }}>
-                {locale === 'te' ? 'మన రుచులు యాప్‌ను ఇన్‌స్టాల్ చేయండి' : 'Install Mana Ruchulu App'}
+                {locale === 'te' ? 'పక్కా లోకల్ యాప్‌ను ఇన్‌స్టాల్ చేయండి' : 'Install Pakka Local App'}
               </div>
               <div style={{ fontSize: '0.72rem', color: '#c2410c' }}>
                 {locale === 'te' ? 'హోమ్ స్క్రీన్‌కు జోడించి వేగంగా ఆర్డర్ చేయండి' : 'Add to home screen for 1-tap ordering & live tracking'}
@@ -400,7 +400,7 @@ export default function ProfilePage() {
           border: '1px dashed #cbd5e1',
         }}>
           <span style={{ fontSize: '0.95rem', fontWeight: 900, letterSpacing: '0.1em', color: '#f97316' }}>
-            {user?.referral_code || 'MANA50'}
+            {user?.referral_code || 'PAKKA50'}
           </span>
           <button
             onClick={copyReferral}
@@ -676,7 +676,7 @@ export default function ProfilePage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: '1.4rem' }}>🤖</span>
                 <div>
-                  <strong style={{ fontSize: '0.95rem' }}>Mana Ruchulu Care</strong>
+                  <strong style={{ fontSize: '0.95rem' }}>Pakka Local Care</strong>
                   <div style={{ fontSize: '0.68rem', color: '#a7f3d0' }}>Online • Instant replies</div>
                 </div>
               </div>

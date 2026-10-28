@@ -17,7 +17,7 @@ export default function CartPage() {
 
   const [cookingInstructions, setCookingInstructions] = useState('');
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<string | null>('MANA10');
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>('PAKKA10');
   const [couponError, setCouponError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'upi' | 'card'>('cod');
   const [selectedAddressId, setSelectedAddressId] = useState<string>(savedAddresses[0]?.id || 'addr-1');

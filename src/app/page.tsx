@@ -49,7 +49,7 @@ export default function HomePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/icons/icon-192.png"
-              alt="Mana Ruchulu"
+              alt="Pakka Local"
               style={{ width: 42, height: 42, borderRadius: 12, boxShadow: '0 4px 12px rgba(234, 88, 12, 0.35)' }}
             />
             <div>
@@ -60,10 +60,10 @@ export default function HomePage() {
                 letterSpacing: '-0.02em',
                 lineHeight: 1.1,
               }}>
-                {locale === 'te' ? 'మన రుచులు' : 'Mana Ruchulu'}
+                {locale === 'te' ? 'పక్కా లోకల్' : 'Pakka Local'}
               </div>
               <div className="brand-subtext" style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
-                {locale === 'te' ? 'ఆంధ్ర & తెలంగాణ రుచికరమైన ఆహారం' : 'Andhra & Telangana Food Delivery'}
+                {locale === 'te' ? 'పక్కా లోకల్. పక్కా టేస్టీ.' : 'Pakka local. Pakka tasty.'}
               </div>
             </div>
           </Link>
@@ -193,7 +193,7 @@ export default function HomePage() {
             marginBottom: 16,
           }}>
             <span>🌶️</span>
-            <span>{locale === 'te' ? 'విజయవాడ, గుంటూరు & హైదరాబాద్ అసలైన రుచులు' : 'Vijayawada • Guntur • Hyderabad Authentic Delivery'}</span>
+            <span>{locale === 'te' ? 'విజయవాడ, గుంటూరు & హైదరాబాద్ పక్కా లోకల్ డెలివరీ' : 'Vijayawada • Guntur • Hyderabad Authentic Delivery'}</span>
           </div>
 
           <h1 style={{
@@ -775,14 +775,14 @@ export default function HomePage() {
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', marginBottom: 4 }}>
-            మన రుచులు • Mana Ruchulu
+            పక్కా లోకల్ • Pakka Local
           </div>
           <p style={{ fontSize: '0.78rem', margin: '0 0 16px', lineHeight: 1.5 }}>
             Hyperlocal authentic Telugu food delivery operating across Vijayawada, Guntur, and Amaravati.
             Built with Next.js Turbopack & progressive web app technology.
           </p>
           <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-            © 2026 Mana Ruchulu Technologies. All rights reserved.
+            © 2026 Pakka Local Technologies. All rights reserved.
           </div>
         </div>
       </footer>

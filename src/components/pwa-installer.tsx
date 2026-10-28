@@ -32,7 +32,7 @@ export default function PwaInstaller() {
     setIsMobile(isHandheld);
 
     // Check temporary session dismissal (reset on refresh/new session so demo users always see it)
-    const sessionDismissed = sessionStorage.getItem('mr_pwa_session_dismissed');
+    const sessionDismissed = sessionStorage.getItem('pl_pwa_session_dismissed');
     if (sessionDismissed === 'true') {
       setIsDismissed(true);
     }
@@ -99,7 +99,7 @@ export default function PwaInstaller() {
   const handleDismiss = () => {
     setIsDismissed(true);
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('mr_pwa_session_dismissed', 'true');
+      sessionStorage.setItem('pl_pwa_session_dismissed', 'true');
     }
   };
 
@@ -139,7 +139,7 @@ export default function PwaInstaller() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/icons/icon-192.png"
-              alt="Mana Ruchulu"
+              alt="Pakka Local"
               style={{
                 width: 42,
                 height: 42,
@@ -156,7 +156,7 @@ export default function PwaInstaller() {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
               }}>
-                Install Mana Ruchulu App
+                Install Pakka Local App
               </div>
               <div style={{
                 fontSize: '0.7rem',
@@ -263,12 +263,12 @@ export default function PwaInstaller() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/icons/icon-192.png"
-                alt="Mana Ruchulu"
+                alt="Pakka Local"
                 style={{ width: 48, height: 48, borderRadius: 12 }}
               />
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900 }}>
-                  Install Mana Ruchulu
+                  Install Pakka Local
                 </h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: '#64748b' }}>
                   Add to your home screen for instant app experience
@@ -357,7 +357,7 @@ export default function PwaInstaller() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 800, flexShrink: 0
                   }}>3</div>
                   <div>
-                    Confirm <strong>Install</strong> to add Mana Ruchulu to your device.
+                    Confirm <strong>Install</strong> to add Pakka Local to your device.
                   </div>
                 </div>
               </div>

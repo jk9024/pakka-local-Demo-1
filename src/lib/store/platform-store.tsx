@@ -344,7 +344,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     }[];
   }) => {
     const orderId = `order-${Date.now()}`;
-    const orderCode = `MR-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderCode = `PL-${Math.floor(1000 + Math.random() * 9000)}`;
     const deliveryOtp = String(Math.floor(1000 + Math.random() * 9000));
     const pickupCode = String(Math.floor(1000 + Math.random() * 9000));
 

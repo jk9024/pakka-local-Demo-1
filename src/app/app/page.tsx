@@ -646,7 +646,7 @@ export default function CustomerHome() {
                     }}>
                       <span>⚡</span>
                       <span>
-                        {locale === 'te' ? 'ఉచిత డెలివరీ & అదనపు క్యాష్‌బ్యాక్' : 'Free delivery with Mana Pass • No minimum order'}
+                        {locale === 'te' ? 'ఉచిత డెలివరీ & అదనపు క్యాష్‌బ్యాక్' : 'Free delivery with Pakka Pass • No minimum order'}
                       </span>
                     </div>
                   </div>

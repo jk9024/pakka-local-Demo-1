@@ -1649,7 +1649,7 @@ export default function RestaurantDashboard() {
 
               <button
                 onClick={() => {
-                  alert(`⚡ Instant Settlement Payout of ₹${pendingPayout.toLocaleString('en-IN')} initiated successfully!\n\nDestination: ${bankName} A/C ****${accountNumber.slice(-4)}\nBeneficiary: ${accountHolder}\nUPI: ${settlementUpi}\nRef: MR-PARTNER-${Date.now().toString().slice(-6)}\nFunds will reflect in your account within 15 minutes.`);
+                  alert(`⚡ Instant Settlement Payout of ₹${pendingPayout.toLocaleString('en-IN')} initiated successfully!\n\nDestination: ${bankName} A/C ****${accountNumber.slice(-4)}\nBeneficiary: ${accountHolder}\nUPI: ${settlementUpi}\nRef: PL-PARTNER-${Date.now().toString().slice(-6)}\nFunds will reflect in your account within 15 minutes.`);
                 }}
                 style={{
                   background: 'linear-gradient(135deg, #22c55e, #16a34a)',

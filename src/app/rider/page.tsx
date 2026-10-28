@@ -1035,7 +1035,7 @@ export default function RiderDashboard() {
               🏢 Designated Cash Collection Hub
             </div>
             <div style={{ fontSize: '0.82rem', color: '#334155' }}>
-              Mana Ruchulu Logistics Office, Opp. APSRTC Bus Complex, Gandhi Nagar
+              Pakka Local Logistics Office, Opp. APSRTC Bus Complex, Gandhi Nagar
             </div>
             <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: 2 }}>
               Open 08:00 AM - 11:30 PM • Manager: Ramesh (Ext 401)

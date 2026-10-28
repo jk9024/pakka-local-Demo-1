@@ -37,7 +37,7 @@ interface AuthContextType extends AuthState {
 // ============================================================
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AUTH_STORAGE_KEY = 'mana-ruchulu-auth';
+const AUTH_STORAGE_KEY = 'pakka-local-auth';
 
 // Demo users for development
 const DEMO_USERS: Record<string, UserProfile> = {

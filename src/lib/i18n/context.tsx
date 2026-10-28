@@ -41,7 +41,7 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | null>(null);
 
-const LOCALE_STORAGE_KEY = 'mana-ruchulu-locale';
+const LOCALE_STORAGE_KEY = 'pakka-local-locale';
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');

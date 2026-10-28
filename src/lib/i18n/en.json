@@ -1,7 +1,7 @@
 {
   "common": {
-    "appName": "Mana Ruchulu",
-    "appTagline": "Your Neighbourhood Flavours",
+    "appName": "Pakka Local",
+    "appTagline": "Pakka local. Pakka tasty.",
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Retry",
@@ -34,7 +34,7 @@
     "offline": "You are offline",
     "offlineDesc": "Some features may be unavailable. Please check your internet connection.",
     "installApp": "Install App",
-    "installPrompt": "Add Mana Ruchulu to your home screen for a better experience!",
+    "installPrompt": "Add Pakka Local to your home screen for a better experience!",
     "cod": "Cash on Delivery",
     "rupee": "₹",
     "veg": "Veg",
@@ -50,7 +50,7 @@
     "optional": "Optional"
   },
   "auth": {
-    "loginTitle": "Login to Mana Ruchulu",
+    "loginTitle": "Login to Pakka Local",
     "loginSubtitle": "Enter your phone number to get started",
     "phoneLabel": "Phone Number",
     "phonePlaceholder": "+91 98765 43210",
@@ -77,7 +77,7 @@
     "searchPlaceholder": "Search restaurants or dishes...",
     "openNow": "Open Now",
     "popular": "Popular Near You",
-    "newOnPlatform": "New on Mana Ruchulu",
+    "newOnPlatform": "New on Pakka Local",
     "cuisines": "Cuisines",
     "allRestaurants": "All Restaurants",
     "deliveryTime": "Delivery in {time} mins",

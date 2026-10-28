@@ -14,14 +14,14 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mana Ruchulu — మన రుచులు | Authentic Food Delivery",
+  title: "Pakka Local — పక్కా లోకల్ | Authentic Food Delivery",
   description:
-    "Order hot and authentic South Indian tiffins, Hyderabadi Dum Biryani, and Andhra meals delivered to your doorstep.",
+    "Order hot and authentic South Indian tiffins, Hyderabadi Dum Biryani, and Andhra meals delivered to your doorstep. Pakka local. Pakka tasty.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Mana Ruchulu",
+    title: "Pakka Local",
   },
   icons: {
     icon: [
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
       { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
-  keywords: ["food delivery", "Telugu", "Andhra Pradesh", "Telangana", "local restaurants", "biryani", "swiggy", "zomato"],
+  keywords: ["food delivery", "Pakka Local", "Telugu", "Andhra Pradesh", "Telangana", "local restaurants", "biryani", "swiggy", "zomato"],
   openGraph: {
-    title: "Mana Ruchulu — మన రుచులు",
-    description: "Order authentic Andhra & Telangana delicacies from your favourite neighbourhood spots",
+    title: "Pakka Local — పక్కా లోకల్",
+    description: "Pakka local. Pakka tasty. Order authentic Andhra & Telangana delicacies from your favourite neighbourhood spots",
     type: "website",
   },
 };

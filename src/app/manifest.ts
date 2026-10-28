@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Mana Ruchulu — మన రుచులు',
-    short_name: 'Mana Ruchulu',
-    description: 'Authentic Telugu Food Delivery — Biryani, Tiffins & Meals',
+    name: 'Pakka Local — పక్కా లోకల్',
+    short_name: 'Pakka Local',
+    description: 'Pakka local. Pakka tasty. Authentic food delivery across Andhra & Telangana',
     start_url: '/app',
     scope: '/',
     display: 'standalone',

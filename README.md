@@ -1,4 +1,4 @@
-# 🍲 Mana Ruchulu (మన రుచులు)
+# 🍲 Pakka Local (పక్కా లోకల్)
 ### Premium Swiggy & Zomato Style Food Delivery Platform for Andhra & Telangana
 
 A real-world, production-ready food delivery web application built with **Next.js 16 (Turbopack)**, **TypeScript**, **Tailwind CSS**, and modern reactive architecture.
@@ -39,17 +39,17 @@ The project has been built and tested with zero build errors (`npm run build` pa
 ### Method 1: Deploy with GitHub (Recommended)
 
 1. **Create a new repository on GitHub**:
-   - Go to [github.com/new](https://github.com/new) and name it `mana-ruchulu`.
+   - Go to [github.com/new](https://github.com/new) and name it `pakka-local`.
 2. **Push your code from terminal**:
    ```bash
    git branch -M main
-   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/mana-ruchulu.git
+   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/pakka-local.git
    git push -u origin main
    ```
 3. **Import to Vercel**:
    - Go to [vercel.com](https://vercel.com) and log in.
    - Click **"Add New..."** -> **"Project"**.
-   - Select your `mana-ruchulu` repository.
+   - Select your `pakka-local` repository.
    - Framework preset will automatically be **Next.js**.
    - Click **"Deploy"**.
    - Your live site will be ready in under 60 seconds!
@@ -67,7 +67,7 @@ npx vercel
 
 - Answer `Y` to `Set up and deploy?`
 - Select your Vercel account/team.
-- Name your project `mana-ruchulu`.
+- Name your project `pakka-local`.
 - Keep `./` as the project root directory.
 - Once preview is ready, deploy to production with:
   ```bash
