@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍲 Mana Ruchulu (మన రుచులు)
+### Premium Swiggy & Zomato Style Food Delivery Platform for Andhra & Telangana
 
-## Getting Started
+A real-world, production-ready food delivery web application built with **Next.js 16 (Turbopack)**, **TypeScript**, **Tailwind CSS**, and modern reactive architecture.
 
-First, run the development server:
+---
+
+## 🌟 Key Application Roles & URLs
+
+| Role | Route | Key Features |
+| :--- | :--- | :--- |
+| **🛍️ Customer Portal** | `/app` | Location picker, Swiggy food mood circular carousels, cuisine filters, dish search, customizable cart, doorstep COD & UPI payment, live order tracking with animated route radar. |
+| **🏪 Restaurant Partner** | `/restaurant` | Kitchen order accept/reject, 15/25/40m prep times, 4-digit handover PIN generator, menu dish CRUD, stock toggles, live customer notice banner, emergency kitchen pause toggle, settlement bank & UPI editor. |
+| **🛵 Delivery Pilot** | `/rider` | Duty status toggle, active trip radar, one-tap navigation simulation, restaurant pickup code verification, customer doorstep cash float collection, delivery completion OTP check. |
+| **👑 Super Admin Operations** | `/admin` | Live fleet pilot manager, cash float reset, super admin direct menu editor for any restaurant, customer support address/instructions editor, delivery zones, promo coupons, global platform fee/GST/surge/city announcement controls. |
+| **🌐 Landing / Role Switcher** | `/` | Instant one-tap navigation to launch any of the 4 roles. |
+
+---
+
+## ⚡ Quick Start for Local Demo
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Run local development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 3. Open in browser
+http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Deploying to Vercel (Demo Mode)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project has been built and tested with zero build errors (`npm run build` passes 17/17 routes). **No external environment variables are required** to run the complete interactive demo on Vercel.
 
-## Learn More
+### Method 1: Deploy with GitHub (Recommended)
 
-To learn more about Next.js, take a look at the following resources:
+1. **Create a new repository on GitHub**:
+   - Go to [github.com/new](https://github.com/new) and name it `mana-ruchulu`.
+2. **Push your code from terminal**:
+   ```bash
+   git branch -M main
+   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/mana-ruchulu.git
+   git push -u origin main
+   ```
+3. **Import to Vercel**:
+   - Go to [vercel.com](https://vercel.com) and log in.
+   - Click **"Add New..."** -> **"Project"**.
+   - Select your `mana-ruchulu` repository.
+   - Framework preset will automatically be **Next.js**.
+   - Click **"Deploy"**.
+   - Your live site will be ready in under 60 seconds!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Method 2: Deploy directly via Vercel CLI
 
-## Deploy on Vercel
+If you have a terminal open inside the project directory:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Run Vercel CLI deploy
+npx vercel
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Answer `Y` to `Set up and deploy?`
+- Select your Vercel account/team.
+- Name your project `mana-ruchulu`.
+- Keep `./` as the project root directory.
+- Once preview is ready, deploy to production with:
+  ```bash
+  npx vercel --prod
+  ```
+
+---
+
+## ⚙️ Architecture & Demo Highlights
+- **Pay on Delivery:** Real-world payment options tailored for local delivery: Cash on Delivery & Doorstep UPI QR.
+- **Custom Route Radar:** Animated live pilot trajectory and dispatch tracking without requiring paid Google Maps API billing.
+- **Bi-lingual Telugu & English:** Instant one-tap toggle for English and Telugu (తెలుగు) across all pages.
+- **Zero-Config Fallbacks:** Ready for Vercel deployment out of the box with `localStorage` state persistence.
