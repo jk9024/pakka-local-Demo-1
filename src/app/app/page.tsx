@@ -74,27 +74,27 @@ export default function CustomerHome() {
         top: 0,
         zIndex: 50,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
           {/* Location Trigger */}
           <div
             onClick={() => setShowZonePicker(!showZonePicker)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', flex: 1, minWidth: 0 }}
           >
-            <span style={{ fontSize: '1.2rem', color: 'var(--primary)' }}>📍</span>
-            <div>
+            <span style={{ fontSize: '1.2rem', color: 'var(--primary)', flexShrink: 0 }}>📍</span>
+            <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {locale === 'te' ? currentZone.name_te : currentZone.name}
                 </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>▼</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', flexShrink: 0 }}>▼</span>
               </div>
               <div style={{
-                fontSize: '0.72rem',
+                fontSize: '0.7rem',
                 color: 'var(--text-muted)',
-                maxWidth: 200,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
+                width: '100%',
               }}>
                 Flat 402, Sai Residency, Main Road
               </div>
@@ -102,7 +102,7 @@ export default function CustomerHome() {
           </div>
 
           {/* Right Controls: Language & Profile Avatar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -463,9 +463,6 @@ export default function CustomerHome() {
         background: '#ffffff',
         borderTop: '1px solid #f8fafc',
         borderBottom: '1px solid #f1f5f9',
-        position: 'sticky',
-        top: 104,
-        zIndex: 40,
       }}>
         <div className="no-scrollbar" style={{ display: 'flex', gap: 8, overflowX: 'auto' }}>
           <button

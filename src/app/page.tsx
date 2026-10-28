@@ -62,14 +62,14 @@ export default function HomePage() {
               }}>
                 {locale === 'te' ? 'మన రుచులు' : 'Mana Ruchulu'}
               </div>
-              <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
+              <div className="brand-subtext" style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
                 {locale === 'te' ? 'ఆంధ్ర & తెలంగాణ రుచికరమైన ఆహారం' : 'Andhra & Telangana Food Delivery'}
               </div>
             </div>
           </Link>
 
           {/* Right Header Navigation & Language */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -80,18 +80,18 @@ export default function HomePage() {
                 background: '#fff7ed',
                 border: '1px solid #fed7aa',
                 color: '#c2410c',
-                padding: '6px 14px',
+                padding: '6px 10px',
                 borderRadius: 99,
-                fontSize: '0.8rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: 4,
               }}
             >
               <span>📲</span>
-              <span>{locale === 'te' ? 'యాప్ ఇన్‌స్టాల్' : 'Install App'}</span>
+              <span>{locale === 'te' ? 'యాప్' : 'Install'}</span>
             </button>
 
             <button
@@ -100,28 +100,29 @@ export default function HomePage() {
                 background: '#fff7ed',
                 border: '1px solid #fed7aa',
                 color: '#c2410c',
-                padding: '6px 14px',
+                padding: '6px 10px',
                 borderRadius: 99,
-                fontSize: '0.8rem',
+                fontSize: '0.75rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: 4,
               }}
             >
-              <span>{locale === 'en' ? '🇮🇳 తెలుగు' : '🇬🇧 English'}</span>
+              <span>{locale === 'en' ? 'తెలుగు' : 'English'}</span>
             </button>
 
             <Link
               href="/app"
+              className="header-order-btn"
               style={{
                 background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
                 color: '#ffffff',
                 textDecoration: 'none',
-                padding: '8px 18px',
+                padding: '7px 16px',
                 borderRadius: 10,
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 800,
                 boxShadow: '0 3px 10px rgba(234, 88, 12, 0.35)',
                 display: 'inline-flex',

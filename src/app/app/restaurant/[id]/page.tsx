@@ -424,7 +424,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
                     color: 'var(--text-muted)',
                     lineHeight: 1.4,
                     margin: 0,
-                    maxWidth: 240,
+                    width: '100%',
                   }}>
                     {locale === 'te' ? item.description_te : item.description}
                   </p>

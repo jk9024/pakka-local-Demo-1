@@ -250,10 +250,10 @@ export default function CartPage() {
                 borderBottom: '1px solid #f1f5f9',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-                <div className={ci.menu_item.is_veg ? 'veg-icon' : 'nonveg-icon'} />
-                <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
+                <div className={ci.menu_item.is_veg ? 'veg-icon' : 'nonveg-icon'} style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {locale === 'te' ? ci.menu_item.name_te : ci.menu_item.name}
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -263,7 +263,7 @@ export default function CartPage() {
               </div>
 
               {/* Stepper */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
                 <div style={{
                   display: 'inline-flex',
                   alignItems: 'center',

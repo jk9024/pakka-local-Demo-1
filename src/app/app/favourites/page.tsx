@@ -40,7 +40,7 @@ export default function FavouritesPage() {
               color: 'inherit',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
               <div style={{
                 width: 56,
                 height: 56,
@@ -55,8 +55,8 @@ export default function FavouritesPage() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
-              <div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 900, margin: 0 }}>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 900, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {locale === 'te' ? r.name_te : r.name}
                 </h3>
                 <div style={{

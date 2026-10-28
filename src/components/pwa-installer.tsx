@@ -117,7 +117,7 @@ export default function PwaInstaller() {
         <div
           style={{
             position: 'fixed',
-            bottom: 74,
+            top: 12,
             left: '50%',
             transform: 'translateX(-50%)',
             width: 'calc(100% - 24px)',

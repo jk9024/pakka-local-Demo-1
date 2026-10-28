@@ -440,8 +440,8 @@ body {
   border-top: 1px solid rgba(226, 232, 240, 0.8);
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 8px 12px 14px;
+  justify-content: space-between;
+  padding: 6px 4px calc(8px + env(safe-area-inset-bottom, 0px));
   z-index: 90;
 }
 
@@ -452,7 +452,7 @@ body {
     transform: none;
     width: 100%;
     max-width: 100%;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 6px 2px calc(8px + env(safe-area-inset-bottom, 0px));
   }
   .swiggy-floating-cart {
     left: 12px;
@@ -464,19 +464,31 @@ body {
 }
 
 .bottom-nav-item {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  justify-content: center;
+  gap: 2px;
   background: none;
   border: none;
   color: #64748b;
   font-size: 0.68rem;
   font-weight: 700;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: var(--radius-md);
+  padding: 4px 2px;
+  border-radius: var(--radius-sm);
   transition: all 0.15s ease;
+  text-align: center;
+}
+
+.bottom-nav-item span:last-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .bottom-nav-item.active {
@@ -485,6 +497,16 @@ body {
 
 .bottom-nav-item.active span:first-child {
   transform: scale(1.15);
+}
+
+/* Mobile Header Clean Alignment Helpers */
+@media (max-width: 520px) {
+  .brand-subtext {
+    display: none !important;
+  }
+  .header-order-btn {
+    display: none !important;
+  }
 }
 
 /* Global Button & Input styles */

@@ -38,8 +38,8 @@ export default function OffersPage() {
               borderLeft: '5px solid var(--primary)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-              <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10, marginBottom: 8 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <span style={{
                   display: 'inline-block',
                   background: '#fff7ed',
@@ -53,7 +53,7 @@ export default function OffersPage() {
                 }}>
                   {coupon.code}
                 </span>
-                <div style={{ fontSize: '0.92rem', fontWeight: 800, marginTop: 8, color: 'var(--text-main)' }}>
+                <div style={{ fontSize: '0.92rem', fontWeight: 800, marginTop: 8, color: 'var(--text-main)', lineHeight: 1.3 }}>
                   {coupon.description}
                 </div>
               </div>
@@ -61,6 +61,7 @@ export default function OffersPage() {
               <button
                 onClick={() => copyCode(coupon.code)}
                 style={{
+                  flexShrink: 0,
                   background: copiedCode === coupon.code ? 'var(--rating-green)' : '#ffffff',
                   color: copiedCode === coupon.code ? '#ffffff' : 'var(--primary)',
                   border: copiedCode === coupon.code ? 'none' : '1.5px solid var(--primary)',

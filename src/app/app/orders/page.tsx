@@ -1,26 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from '@/lib/i18n/context';
-import { SAMPLE_ORDERS, RESTAURANTS, type Order } from '@/lib/mock-data';
+import { usePlatform } from '@/lib/store/platform-store';
+import { type Order } from '@/lib/mock-data';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function OrdersPage() {
   const { t, locale } = useTranslation();
+  const { orders, restaurants } = usePlatform();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'active' | 'past'>('active');
-  const [orders, setOrders] = useState<Order[]>([]);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('mana-ruchulu-custom-orders');
-      const customOrders: Order[] = stored ? JSON.parse(stored) : [];
-      setOrders([...customOrders, ...SAMPLE_ORDERS]);
-    } catch {
-      setOrders(SAMPLE_ORDERS);
-    }
-  }, []);
 
   const activeOrders = orders.filter(
     o => o.status !== 'delivered' && o.status !== 'cancelled'
@@ -136,7 +127,7 @@ export default function OrdersPage() {
               { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }
             );
 
-            const restaurant = RESTAURANTS.find(r => r.id === order.restaurant_id);
+            const restaurant = restaurants.find(r => r.id === order.restaurant_id);
 
             return (
               <div
