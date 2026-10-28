@@ -4,6 +4,7 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n/context";
 import { AuthProvider } from "@/lib/auth/context";
 import { PlatformProvider } from "@/lib/store/platform-store";
+import PwaInstaller from "@/components/pwa-installer";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -16,6 +17,21 @@ export const metadata: Metadata = {
   title: "Mana Ruchulu — మన రుచులు | Authentic Food Delivery",
   description:
     "Order hot and authentic South Indian tiffins, Hyderabadi Dum Biryani, and Andhra meals delivered to your doorstep.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Mana Ruchulu",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   keywords: ["food delivery", "Telugu", "Andhra Pradesh", "Telangana", "local restaurants", "biryani", "swiggy", "zomato"],
   openGraph: {
     title: "Mana Ruchulu — మన రుచులు",
@@ -29,7 +45,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#f97316",
+  themeColor: "#ea580c",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -43,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AuthProvider>
             <PlatformProvider>
               {children}
+              <PwaInstaller />
             </PlatformProvider>
           </AuthProvider>
         </I18nProvider>

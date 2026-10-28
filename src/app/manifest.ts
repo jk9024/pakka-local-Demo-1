@@ -1,0 +1,59 @@
+import type { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'Mana Ruchulu — మన రుచులు',
+    short_name: 'Mana Ruchulu',
+    description: 'Authentic Telugu Food Delivery — Biryani, Tiffins & Meals',
+    start_url: '/app',
+    scope: '/',
+    display: 'standalone',
+    background_color: '#ffffff',
+    theme_color: '#ea580c',
+    orientation: 'portrait',
+    categories: ['food', 'shopping', 'lifestyle'],
+    icons: [
+      {
+        src: '/icons/icon-192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-maskable-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+    ],
+    shortcuts: [
+      {
+        name: 'Order Food',
+        short_name: 'Order',
+        description: 'Browse dishes and order food',
+        url: '/app',
+        icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Track Orders',
+        short_name: 'Orders',
+        description: 'Track active food delivery orders',
+        url: '/app/orders',
+        icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Offers & Deals',
+        short_name: 'Offers',
+        description: 'View discount coupons and deals',
+        url: '/app/offers',
+        icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }],
+      },
+    ],
+  };
+}
