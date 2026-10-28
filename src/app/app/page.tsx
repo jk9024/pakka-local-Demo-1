@@ -102,7 +102,32 @@ export default function CustomerHome() {
           </div>
 
           {/* Right Controls: Language & Profile Avatar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-pwa-install'));
+                }
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #ea580c, #c2410c)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '4px 9px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+                boxShadow: '0 2px 6px rgba(234, 88, 12, 0.3)',
+              }}
+            >
+              <span>📲</span>
+              <span>{locale === 'te' ? 'యాప్' : 'Install'}</span>
+            </button>
+
             <button
               onClick={() => setLocale(locale === 'en' ? 'te' : 'en')}
               style={{

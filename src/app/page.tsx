@@ -71,6 +71,30 @@ export default function HomePage() {
           {/* Right Header Navigation & Language */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-pwa-install'));
+                }
+              }}
+              style={{
+                background: '#fff7ed',
+                border: '1px solid #fed7aa',
+                color: '#c2410c',
+                padding: '6px 14px',
+                borderRadius: 99,
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              <span>📲</span>
+              <span>{locale === 'te' ? 'యాప్ ఇన్‌స్టాల్' : 'Install App'}</span>
+            </button>
+
+            <button
               onClick={() => setLocale(locale === 'en' ? 'te' : 'en')}
               style={{
                 background: '#fff7ed',

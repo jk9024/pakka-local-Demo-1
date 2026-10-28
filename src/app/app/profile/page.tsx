@@ -341,6 +341,44 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Install Mobile PWA App Card */}
+      <div className="card" style={{
+        padding: 16,
+        marginBottom: 16,
+        background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
+        border: '1.5px solid #fed7aa',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/icons/icon-192.png"
+              alt="Mana Ruchulu"
+              style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, boxShadow: '0 2px 8px rgba(234,88,12,0.4)' }}
+            />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#9a3412' }}>
+                {locale === 'te' ? 'మన రుచులు యాప్‌ను ఇన్‌స్టాల్ చేయండి' : 'Install Mana Ruchulu App'}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#c2410c' }}>
+                {locale === 'te' ? 'హోమ్ స్క్రీన్‌కు జోడించి వేగంగా ఆర్డర్ చేయండి' : 'Add to home screen for 1-tap ordering & live tracking'}
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('open-pwa-install'));
+              }
+            }}
+            className="btn-primary"
+            style={{ padding: '8px 14px', fontSize: '0.78rem', height: 'auto', flexShrink: 0 }}
+          >
+            {locale === 'te' ? 'ఇన్‌స్టాల్' : 'Install'}
+          </button>
+        </div>
+      </div>
+
       {/* Referral Code Card */}
       <div className="card" style={{ padding: 16, marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
