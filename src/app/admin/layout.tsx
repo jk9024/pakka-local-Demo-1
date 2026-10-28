@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   return (
-    <div className="app-shell" style={{ minHeight: '100dvh' }}>
+    <div className="admin-shell">
       {/* Top Admin Bar */}
       <header style={{
         background: 'linear-gradient(135deg, #0f172a, #1e293b)',

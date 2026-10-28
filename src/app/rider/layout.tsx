@@ -12,7 +12,7 @@ export default function RiderLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   return (
-    <div className="app-shell" style={{ minHeight: '100dvh', background: 'var(--surface-app)' }}>
+    <div className="rider-shell">
       {/* Top Rider Bar */}
       <header style={{
         background: 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)',

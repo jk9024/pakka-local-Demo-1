@@ -19,7 +19,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
   ).length;
 
   return (
-    <div className="app-shell" style={{ minHeight: '100dvh', background: 'var(--surface-app)' }}>
+    <div className="merchant-shell">
       {/* Top Restaurant Bar */}
       <header style={{
         background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)',

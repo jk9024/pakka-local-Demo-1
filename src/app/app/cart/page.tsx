@@ -723,7 +723,7 @@ export default function CartPage() {
         left: '50%',
         transform: 'translateX(-50%)',
         width: '100%',
-        maxWidth: 480,
+        maxWidth: 680,
         background: '#ffffff',
         borderTop: '1px solid #e2e8f0',
         padding: '12px 16px',

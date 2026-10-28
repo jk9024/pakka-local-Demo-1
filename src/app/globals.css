@@ -53,25 +53,90 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   background: var(--bg-main);
   color: var(--text-main);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  position: relative;
 }
 
-/* Mobile viewport container */
+/* ============================================================
+   Responsive Layout Shells (Fluid on Mobile, Refined on Desktop)
+   ============================================================ */
+
+/* Customer Ordering Shell */
+.customer-shell,
 .app-shell {
-  max-width: 480px;
+  width: 100%;
+  max-width: 680px;
   margin: 0 auto;
   min-height: 100dvh;
   background: #ffffff;
   position: relative;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+@media (max-width: 680px) {
+  .customer-shell,
+  .app-shell {
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
+/* Super Admin Operations Console (Wide Screen Dashboard) */
+.admin-shell {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: #ffffff;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Restaurant Merchant Portal (Wide Responsive Hub) */
+.merchant-shell {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: #f8fafc;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Delivery Pilot Cockpit */
+.rider-shell {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: #f8fafc;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
 }
@@ -336,7 +401,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 24px);
-  max-width: 440px;
+  max-width: 640px;
   background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
   color: #ffffff;
   border-radius: var(--radius-md);
@@ -368,7 +433,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 480px;
+  max-width: 680px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -378,6 +443,24 @@ body {
   justify-content: space-around;
   padding: 8px 12px 14px;
   z-index: 90;
+}
+
+@media (max-width: 680px) {
+  .bottom-nav {
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  .swiggy-floating-cart {
+    left: 12px;
+    right: 12px;
+    transform: none;
+    width: auto;
+    max-width: none;
+  }
 }
 
 .bottom-nav-item {
