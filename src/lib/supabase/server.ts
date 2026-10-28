@@ -3,10 +3,12 @@ import { cookies } from 'next/headers';
 
 export async function createClient() {
   const cookieStore = await cookies();
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock-demo.supabase.co';
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-anon-key';
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         getAll() {
@@ -29,8 +31,7 @@ export async function createClient() {
 
 export async function createServiceClient() {
   const { createClient: createSupabaseClient } = await import('@supabase/supabase-js');
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock-demo.supabase.co';
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock-service-key';
+  return createSupabaseClient(url, serviceKey);
 }
