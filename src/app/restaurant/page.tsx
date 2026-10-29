@@ -24,8 +24,8 @@ export default function RestaurantDashboard() {
     updateRestaurant,
   } = usePlatform();
 
-  // Active restaurant selection (default to Sri Sai Tiffins)
-  const [selectedRestId, setSelectedRestId] = useState<string>('rest-1');
+  // Active restaurant selection (default to all outlets so all incoming orders show immediately)
+  const [selectedRestId, setSelectedRestId] = useState<string>('all');
   const currentRestaurant = restaurants.find(r => r.id === selectedRestId) || restaurants[0];
 
   // Active dashboard tab
@@ -99,8 +99,8 @@ export default function RestaurantDashboard() {
   const isAllOutlets = selectedRestId === 'all';
   const restOrders = isAllOutlets ? orders : orders.filter(o => o.restaurant_id === currentRestaurant.id);
   const incomingOrders = restOrders.filter(o => o.status === 'placed');
-  const kitchenOrders = restOrders.filter(o => o.status === 'confirmed' || o.status === 'preparing');
-  const readyOrders = restOrders.filter(o => o.status === 'ready_for_pickup');
+  const kitchenOrders = restOrders.filter(o => o.status === 'confirmed' || o.status === 'preparing' || o.status === 'accepted');
+  const readyOrders = restOrders.filter(o => o.status === 'ready_for_pickup' || o.status === 'picked_up' || o.status === 'out_for_delivery');
   const pastOrders = restOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
 
   // Filter menu items for this restaurant
@@ -358,6 +358,29 @@ export default function RestaurantDashboard() {
             }}
           >
             <span>{soundEnabled ? '🔔 Alert Sound: ON' : '🔕 Mute Alerts'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSoundEnabled(true);
+              orderSound.testRingtone();
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              background: '#fff7ed',
+              color: '#ea580c',
+              border: '1.5px solid #fdba74',
+              padding: '6px 12px',
+              borderRadius: 20,
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+            }}
+            title="Click to test order ringtone and unlock browser audio"
+          >
+            <span>▶ Test Ringtone</span>
           </button>
           <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
             <strong>{restMenuItems.length}</strong> items • <strong>{restOrders.length}</strong> total orders

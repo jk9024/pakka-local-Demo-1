@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function OrdersPage() {
   const { t, locale } = useTranslation();
-  const { orders, restaurants } = usePlatform();
+  const { orders, restaurants, isInitialized } = usePlatform();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'active' | 'past'>('active');
 
@@ -95,7 +95,14 @@ export default function OrdersPage() {
       </div>
 
       {/* Orders List */}
-      {displayedOrders.length === 0 ? (
+      {!isInitialized ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', borderRadius: 'var(--radius-lg)' }}>
+          <div style={{ fontSize: '2rem', marginBottom: 10 }}>⏳</div>
+          <p style={{ color: '#64748b', fontWeight: 700 }}>
+            {locale === 'te' ? 'ఆర్డర్‌లు లోడ్ అవుతున్నాయి...' : 'Loading your orders...'}
+          </p>
+        </div>
+      ) : displayedOrders.length === 0 ? (
         <div style={{
           textAlign: 'center',
           padding: '60px 20px',

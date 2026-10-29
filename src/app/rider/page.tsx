@@ -66,7 +66,7 @@ export default function RiderDashboard() {
   }, []);
 
   useEffect(() => {
-    if (isRiderOnDuty && !activeDelivery && availableGigs.length > 0 && soundEnabled) {
+    if (isRiderOnDuty && availableGigs.length > 0 && soundEnabled) {
       orderSound.startAlertLoop();
     } else {
       orderSound.stopAlertLoop();
@@ -74,7 +74,7 @@ export default function RiderDashboard() {
     return () => {
       orderSound.stopAlertLoop();
     };
-  }, [isRiderOnDuty, activeDelivery, availableGigs.length, soundEnabled]);
+  }, [isRiderOnDuty, availableGigs.length, soundEnabled]);
 
   // Completed deliveries for this rider
   const completedDeliveries = orders.filter(
@@ -223,28 +223,53 @@ export default function RiderDashboard() {
           </div>
         </div>
 
-        <button
-          onClick={() => setShowDepositModal(true)}
-          style={{
-            background: 'rgba(255, 255, 255, 0.15)',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            color: '#fff',
-            padding: '8px 16px',
-            borderRadius: 10,
-            fontSize: '0.78rem',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-          }}
-        >
-          <span>🏦 Deposit at Hub</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            type="button"
+            onClick={() => {
+              setSoundEnabled(true);
+              orderSound.testRingtone();
+            }}
+            style={{
+              background: '#059669',
+              border: '1px solid #34d399',
+              color: '#fff',
+              padding: '8px 14px',
+              borderRadius: 10,
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+            }}
+            title="Click to test rider ringtone and unlock browser audio"
+          >
+            <span>▶ Test Ringtone</span>
+          </button>
+          <button
+            onClick={() => setShowDepositModal(true)}
+            style={{
+              background: 'rgba(255, 255, 255, 0.15)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              color: '#fff',
+              padding: '8px 16px',
+              borderRadius: 10,
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <span>🏦 Deposit at Hub</span>
+          </button>
+        </div>
       </div>
 
       {/* Real-time Incoming Gig Ringing Alert Banner */}
-      {!activeDelivery && availableGigs.length > 0 && isRiderOnDuty && (
+      {availableGigs.length > 0 && isRiderOnDuty && (
         <div style={{
           background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
           color: '#fff',
@@ -272,6 +297,23 @@ export default function RiderDashboard() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => {
+                orderSound.testRingtone();
+              }}
+              style={{
+                background: '#fff',
+                color: '#059669',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: 20,
+                fontSize: '0.75rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+              }}
+            >
+              ▶ Test Sound
+            </button>
             <button
               onClick={() => {
                 orderSound.unlockAudio();
@@ -808,9 +850,9 @@ export default function RiderDashboard() {
             </div>
           ) : null}
 
-          {/* CASE C: NO ACTIVE DELIVERY -> SHOW AVAILABLE GIGS RADAR */}
-          {!activeDelivery && !successCelebration && (
-            <div>
+          {/* CASE C: AVAILABLE GIGS RADAR (ALWAYS VISIBLE WHEN GIGS EXIST) */}
+          {(!activeDelivery || availableGigs.length > 0) && !successCelebration && (
+            <div style={{ marginTop: activeDelivery ? 20 : 0 }}>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',

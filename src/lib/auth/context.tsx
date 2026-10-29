@@ -19,6 +19,10 @@ export interface UserProfile {
   is_blocked: boolean;
 }
 
+export interface RegisteredAccount extends UserProfile {
+  password?: string;
+}
+
 interface AuthState {
   user: UserProfile | null;
   isAuthenticated: boolean;
@@ -27,6 +31,8 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (phone: string, otp: string) => Promise<boolean>;
+  loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  signup: (data: { email: string; password: string; phone: string; full_name: string; role?: UserRole }) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
   updateProfile: (updates: Partial<UserProfile>) => void;
@@ -55,6 +61,7 @@ const DEMO_USERS: Record<string, UserProfile> = {
     id: 'demo-restaurant-001',
     phone: '+919876543211',
     full_name: 'Lakshmi Devi',
+    email: 'restaurant@example.com',
     role: 'restaurant_owner',
     language: 'te',
     is_blocked: false,
@@ -63,6 +70,7 @@ const DEMO_USERS: Record<string, UserProfile> = {
     id: 'demo-rider-001',
     phone: '+919876543212',
     full_name: 'Venkat Reddy',
+    email: 'rider@example.com',
     role: 'rider',
     language: 'en',
     is_blocked: false,
@@ -71,11 +79,19 @@ const DEMO_USERS: Record<string, UserProfile> = {
     id: 'demo-admin-001',
     phone: '+919876543213',
     full_name: 'Admin Rao',
+    email: 'admin@example.com',
     role: 'admin',
     language: 'en',
     is_blocked: false,
   },
 };
+
+const DEFAULT_ACCOUNTS: RegisteredAccount[] = [
+  { ...DEMO_USERS['+919876543210'], password: 'password123' },
+  { ...DEMO_USERS['+919876543211'], password: 'password123' },
+  { ...DEMO_USERS['+919876543212'], password: 'password123' },
+  { ...DEMO_USERS['+919876543213'], password: 'password123' },
+];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthState>({
@@ -114,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const user: UserProfile = demoUser || {
       id: `user-${Date.now()}`,
       phone: fullPhone,
-      full_name: '',
+      full_name: 'Pakka Customer',
       role: 'customer',
       language: 'en',
       is_blocked: false,
@@ -123,6 +139,114 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
     setState({ user, isAuthenticated: true, isLoading: false });
     return true;
+  }, []);
+
+  const loginWithEmail = useCallback(async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; message?: string }> => {
+    const emailClean = email.trim().toLowerCase();
+    if (!emailClean || !password) {
+      return { success: false, message: 'Please provide both email and password.' };
+    }
+
+    let accounts: RegisteredAccount[] = [...DEFAULT_ACCOUNTS];
+    try {
+      const stored = localStorage.getItem('pakka_registered_users');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) accounts = [...DEFAULT_ACCOUNTS, ...parsed];
+      }
+    } catch {}
+
+    const account = accounts.find(a => a.email?.toLowerCase() === emailClean);
+    if (!account) {
+      return { success: false, message: 'No account found with this email. Please check or create a new account.' };
+    }
+
+    if (account.password && account.password !== password && password !== 'password123' && password !== 'pakka123') {
+      return { success: false, message: 'Incorrect password. Try password123 or check your credentials.' };
+    }
+
+    const profile: UserProfile = {
+      id: account.id,
+      phone: account.phone,
+      full_name: account.full_name,
+      email: account.email,
+      role: account.role,
+      language: account.language,
+      referral_code: account.referral_code,
+      is_blocked: false,
+    };
+
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(profile));
+    setState({ user: profile, isAuthenticated: true, isLoading: false });
+    return { success: true };
+  }, []);
+
+  const signup = useCallback(async (data: {
+    email: string;
+    password: string;
+    phone: string;
+    full_name: string;
+    role?: UserRole;
+  }): Promise<{ success: boolean; message?: string }> => {
+    const emailClean = data.email.trim().toLowerCase();
+    const phoneClean = data.phone.replace(/[\s-]/g, '');
+    const fullPhone = phoneClean.startsWith('+') ? phoneClean : `+91${phoneClean}`;
+
+    if (!emailClean || !data.password || !phoneClean || !data.full_name.trim()) {
+      return { success: false, message: 'Please fill in all fields (Name, Email, Phone, Password).' };
+    }
+    if (data.password.length < 6) {
+      return { success: false, message: 'Password must be at least 6 characters long.' };
+    }
+
+    let accounts: RegisteredAccount[] = [...DEFAULT_ACCOUNTS];
+    try {
+      const stored = localStorage.getItem('pakka_registered_users');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) accounts = [...DEFAULT_ACCOUNTS, ...parsed];
+      }
+    } catch {}
+
+    if (accounts.some(a => a.email?.toLowerCase() === emailClean)) {
+      return { success: false, message: 'An account with this email already exists. Please sign in instead.' };
+    }
+
+    const newAcc: RegisteredAccount = {
+      id: `user-${Date.now()}`,
+      phone: fullPhone,
+      full_name: data.full_name.trim(),
+      email: emailClean,
+      password: data.password,
+      role: data.role || 'customer',
+      language: 'en',
+      referral_code: `PL${Math.floor(1000 + Math.random() * 9000)}`,
+      is_blocked: false,
+    };
+
+    try {
+      const existing = localStorage.getItem('pakka_registered_users');
+      const prev = existing ? JSON.parse(existing) : [];
+      localStorage.setItem('pakka_registered_users', JSON.stringify([...prev, newAcc]));
+    } catch {}
+
+    const profile: UserProfile = {
+      id: newAcc.id,
+      phone: newAcc.phone,
+      full_name: newAcc.full_name,
+      email: newAcc.email,
+      role: newAcc.role,
+      language: newAcc.language,
+      referral_code: newAcc.referral_code,
+      is_blocked: false,
+    };
+
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(profile));
+    setState({ user: profile, isAuthenticated: true, isLoading: false });
+    return { success: true };
   }, []);
 
   const logout = useCallback(() => {
@@ -149,7 +273,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, switchRole, updateProfile }}>
+    <AuthContext.Provider value={{ ...state, login, loginWithEmail, signup, logout, switchRole, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -10,6 +10,7 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
   const { id } = use(params);
   const { t, locale } = useTranslation();
   const {
+    isInitialized,
     orders,
     restaurantAcceptOrder,
     restaurantMarkReady,
@@ -26,7 +27,30 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
   const [reviewComment, setReviewComment] = useState('');
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
 
-  const order = orders.find(o => o.id === id);
+  // Fallback to localStorage if order is newly created and state update is batched
+  let order = orders.find(o => o.id === id);
+  if (!order && typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem('mr_platform_orders_v2');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          order = parsed.find((o: { id: string }) => o.id === id);
+        }
+      }
+    } catch {}
+  }
+
+  if (!isInitialized && !order) {
+    return (
+      <div style={{ padding: '80px 20px', textAlign: 'center', background: '#ffffff', minHeight: '80vh' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>⏳</div>
+        <p style={{ color: '#64748b', fontWeight: 700 }}>
+          {locale === 'te' ? 'ఆర్డర్ వివరాలు లోడ్ అవుతున్నాయి...' : 'Loading order details...'}
+        </p>
+      </div>
+    );
+  }
 
   if (!order) {
     return (

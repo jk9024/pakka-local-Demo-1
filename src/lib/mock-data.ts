@@ -702,7 +702,7 @@ export const SAMPLE_ORDERS: Order[] = [
     restaurant_name: 'Hyderabad Biryani House',
     rider_id: 'demo-rider-001',
     rider_name: 'Venkat Reddy',
-    status: 'preparing',
+    status: 'delivered',
     items_total: 480,
     delivery_fee: 25,
     discount_amount: 50,

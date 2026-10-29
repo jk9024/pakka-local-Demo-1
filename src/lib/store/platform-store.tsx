@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import {
   RESTAURANTS,
   MENU_ITEMS,
@@ -37,6 +37,7 @@ export interface OrderRating {
 }
 
 interface PlatformContextType {
+  isInitialized: boolean;
   // Orders
   orders: Order[];
   placeOrder: (orderData: {
@@ -175,20 +176,33 @@ const DEFAULT_ADDRESSES: SavedAddress[] = [
   },
 ];
 
+const SENDER_ID = typeof window !== 'undefined' ? `tab_${Math.random().toString(36).slice(2, 9)}` : 'server';
+
+let syncBroadcastChannel: BroadcastChannel | null = null;
+const getBroadcastChannel = () => {
+  if (typeof window === 'undefined') return null;
+  if (!syncBroadcastChannel && typeof BroadcastChannel !== 'undefined') {
+    try {
+      syncBroadcastChannel = new BroadcastChannel('pakka_platform_sync');
+    } catch {}
+  }
+  return syncBroadcastChannel;
+};
+
 const broadcastPlatformSync = (key: string, data: unknown) => {
   if (typeof window === 'undefined') return;
   try {
-    if (typeof BroadcastChannel !== 'undefined') {
-      const bc = new BroadcastChannel('pakka_platform_sync');
-      bc.postMessage({ key, data });
-      bc.close();
+    const bc = getBroadcastChannel();
+    if (bc) {
+      bc.postMessage({ key, data, senderId: SENDER_ID, timestamp: Date.now() });
     }
-  } catch {
-    // broadcast channel fallback
-  }
+  } catch {}
 };
 
 export function PlatformProvider({ children }: { children: React.ReactNode }) {
+  // Remote sync guard to prevent echo/ping-pong re-broadcast loops across tabs
+  const isRemoteSyncRef = useRef<boolean>(false);
+
   // State initialization
   const [orders, setOrders] = useState<Order[]>(SAMPLE_ORDERS);
   const [restaurants, setRestaurants] = useState<Restaurant[]>(RESTAURANTS);
@@ -259,7 +273,10 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const handleSync = (key: string, data: unknown) => {
+    const handleSync = (key: string, data: unknown, senderId?: string) => {
+      if (senderId && senderId === SENDER_ID) return; // Skip own broadcast
+      isRemoteSyncRef.current = true;
+
       if (key === STORAGE_KEYS.ORDERS && Array.isArray(data)) {
         setOrders(data);
       } else if (key === STORAGE_KEYS.RESTAURANTS && Array.isArray(data)) {
@@ -273,31 +290,29 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       } else if (key === STORAGE_KEYS.ADDRESSES && Array.isArray(data)) {
         setSavedAddresses(data);
       } else if (key === STORAGE_KEYS.RATINGS && typeof data === 'object') {
-        setRatings(data);
+        setRatings(data as Record<string, OrderRating>);
       } else if (key === STORAGE_KEYS.RIDER_CASH) {
         setRiderCashInHand(Number(data));
       } else if (key === STORAGE_KEYS.RIDER_DUTY) {
         setIsRiderOnDuty(data === true || data === 'true');
       } else if (key === STORAGE_KEYS.SETTINGS && typeof data === 'object') {
-        setPlatformSettings(data);
-        if (data.surge_pricing_active !== undefined) setSurgePricing(data.surge_pricing_active);
-        if (data.surge_fee !== undefined) setSurgeFeeAmount(data.surge_fee);
+        const s = data as PlatformSettings;
+        setPlatformSettings(s);
+        if (s.surge_pricing_active !== undefined) setSurgePricing(s.surge_pricing_active);
+        if (s.surge_fee !== undefined) setSurgeFeeAmount(s.surge_fee);
       } else if (key === STORAGE_KEYS.PILOTS && Array.isArray(data)) {
         setPilots(data);
       }
     };
 
-    let bc: BroadcastChannel | null = null;
-    try {
-      if (typeof BroadcastChannel !== 'undefined') {
-        bc = new BroadcastChannel('pakka_platform_sync');
-        bc.onmessage = (event) => {
-          if (event.data?.key && event.data?.data) {
-            handleSync(event.data.key, event.data.data);
-          }
-        };
-      }
-    } catch {}
+    const bc = getBroadcastChannel();
+    if (bc) {
+      bc.onmessage = (event) => {
+        if (event.data?.key && event.data?.data) {
+          handleSync(event.data.key, event.data.data, event.data.senderId);
+        }
+      };
+    }
 
     const handleStorageEvent = (e: StorageEvent) => {
       if (!e.key || !e.newValue) return;
@@ -312,7 +327,6 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('storage', handleStorageEvent);
 
     return () => {
-      if (bc) bc.close();
       window.removeEventListener('storage', handleStorageEvent);
     };
   }, []);
@@ -320,6 +334,10 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
   // Sync state to localStorage on updates and broadcast across tabs
   useEffect(() => {
     if (!isInitialized) return;
+    if (isRemoteSyncRef.current) {
+      isRemoteSyncRef.current = false;
+      return;
+    }
     try {
       localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
       broadcastPlatformSync(STORAGE_KEYS.ORDERS, orders);
@@ -900,6 +918,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
   return (
     <PlatformContext.Provider
       value={{
+        isInitialized,
         orders,
         placeOrder,
         restaurantAcceptOrder,
