@@ -142,6 +142,7 @@ export interface Order {
   picked_up_at?: string;
   delivered_at?: string;
   cancelled_at?: string;
+  rider_declined?: boolean;
   items: OrderItem[];
 }
 

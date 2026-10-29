@@ -697,6 +697,28 @@ export default function AdminPage() {
       {/* ======================================================================= */}
       {activeTab === 'orders' && (
         <div>
+          {/* Live Sync Status Banner */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 12,
+            background: '#f8fafc',
+            padding: '8px 14px',
+            borderRadius: 10,
+            border: '1px solid #e2e8f0',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
+              <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#334155' }}>
+                Real-Time Multi-Outlet & Rider Fleet Sync Active
+              </span>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+              Showing {filteredOrders.length} of {orders.length} total platform orders
+            </span>
+          </div>
+
           {/* Filter Pills */}
           <div style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
             {[

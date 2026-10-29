@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '@/lib/i18n/context';
 import { usePlatform } from '@/lib/store/platform-store';
+import { orderSound } from '@/lib/audio/order-sound';
 import type { MenuItem } from '@/lib/mock-data';
 import Image from 'next/image';
 
@@ -94,20 +95,61 @@ export default function RestaurantDashboard() {
   // Audio simulation state
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
-  // Filter orders for the selected restaurant
-  const restOrders = orders.filter(o => o.restaurant_id === currentRestaurant.id);
+  // Filter orders for the selected restaurant (or all outlets)
+  const isAllOutlets = selectedRestId === 'all';
+  const restOrders = isAllOutlets ? orders : orders.filter(o => o.restaurant_id === currentRestaurant.id);
   const incomingOrders = restOrders.filter(o => o.status === 'placed');
   const kitchenOrders = restOrders.filter(o => o.status === 'confirmed' || o.status === 'preparing');
   const readyOrders = restOrders.filter(o => o.status === 'ready_for_pickup');
   const pastOrders = restOrders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
 
   // Filter menu items for this restaurant
-  const restMenuItems = menuItems.filter(m => m.restaurant_id === currentRestaurant.id);
+  const restMenuItems = isAllOutlets ? menuItems : menuItems.filter(m => m.restaurant_id === currentRestaurant.id);
   const derivedCategories = Array.from(new Set(restMenuItems.map(m => m.category || m.category_id || 'Specials')));
   const categories = ['all', ...Array.from(new Set([...customCategories, ...derivedCategories]))];
   const displayedMenuItems = selectedCategory === 'all'
     ? restMenuItems
     : restMenuItems.filter(m => (m.category || m.category_id || 'Specials').toLowerCase() === selectedCategory.toLowerCase());
+
+  // Sound loop management: rings continuously until Accept or Reject is pressed
+  useEffect(() => {
+    const unlock = () => orderSound.unlockAudio();
+    window.addEventListener('click', unlock, { once: true });
+    window.addEventListener('touchstart', unlock, { once: true });
+    return () => {
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (incomingOrders.length > 0 && soundEnabled) {
+      orderSound.startAlertLoop();
+    } else {
+      orderSound.stopAlertLoop();
+    }
+    return () => {
+      orderSound.stopAlertLoop();
+    };
+  }, [incomingOrders.length, soundEnabled]);
+
+  const handleAcceptOrder = (orderId: string) => {
+    restaurantAcceptOrder(orderId);
+    const remaining = incomingOrders.filter(o => o.id !== orderId);
+    if (remaining.length === 0) {
+      orderSound.stopAlertLoop();
+    }
+  };
+
+  const handleConfirmRejectOrder = () => {
+    if (!rejectOrderId) return;
+    restaurantRejectOrder(rejectOrderId, rejectReason);
+    const remaining = incomingOrders.filter(o => o.id !== rejectOrderId);
+    if (remaining.length === 0) {
+      orderSound.stopAlertLoop();
+    }
+    setRejectOrderId(null);
+  };
 
   // Financial calculations
   const totalGMV = pastOrders
@@ -120,6 +162,7 @@ export default function RestaurantDashboard() {
   // Sync profile form when selected restaurant changes
   const handleSelectRestaurant = (restId: string) => {
     setSelectedRestId(restId);
+    if (restId === 'all') return;
     const target = restaurants.find(r => r.id === restId);
     if (target) {
       setOutletName(target.name);
@@ -283,6 +326,9 @@ export default function RestaurantDashboard() {
               cursor: 'pointer',
             }}
           >
+            <option value="all">
+              🌟 All Outlets ({orders.filter(o => o.status === 'placed').length} Pending Action)
+            </option>
             {restaurants.map(r => (
               <option key={r.id} value={r.id}>
                 {r.name} ({r.address_text || r.area || 'Gandhi Nagar'})
@@ -293,7 +339,10 @@ export default function RestaurantDashboard() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={() => {
+              orderSound.unlockAudio();
+              setSoundEnabled(!soundEnabled);
+            }}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -308,13 +357,65 @@ export default function RestaurantDashboard() {
               cursor: 'pointer',
             }}
           >
-            <span>{soundEnabled ? '🔔 Sound ON' : '🔕 Mute Alerts'}</span>
+            <span>{soundEnabled ? '🔔 Alert Sound: ON' : '🔕 Mute Alerts'}</span>
           </button>
           <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
             <strong>{restMenuItems.length}</strong> items • <strong>{restOrders.length}</strong> total orders
           </div>
         </div>
       </div>
+
+      {/* Real-time Incoming Ringing Alert Banner */}
+      {incomingOrders.length > 0 && (
+        <div style={{
+          background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+          color: '#fff',
+          borderRadius: 14,
+          padding: '14px 20px',
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 12,
+          boxShadow: '0 8px 24px rgba(239,68,68,0.3)',
+          border: '2px solid #fecaca',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: '1.8rem' }}>🔔</span>
+            <div>
+              <div style={{ fontSize: '1rem', fontWeight: 900, letterSpacing: '0.01em' }}>
+                {incomingOrders.length} INCOMING ORDER{incomingOrders.length > 1 ? 'S' : ''} WAITING — RINGING LIVE
+              </div>
+              <div style={{ fontSize: '0.78rem', opacity: 0.95, marginTop: 2 }}>
+                Sound loops continuously until you press Accept or Reject on the order card below.
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => {
+                setActiveTab('orders');
+                setOrderSubTab('incoming');
+              }}
+              style={{
+                background: '#fff',
+                color: '#dc2626',
+                border: 'none',
+                padding: '9px 18px',
+                borderRadius: 20,
+                fontSize: '0.82rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              }}
+            >
+              Review & Accept Now →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* KPI Stats Banner */}
       <div style={{
@@ -797,7 +898,7 @@ export default function RestaurantDashboard() {
                         </button>
 
                         <button
-                          onClick={() => restaurantAcceptOrder(order.id)}
+                          onClick={() => handleAcceptOrder(order.id)}
                           style={{
                             flex: 2,
                             padding: '12px 0',
@@ -2338,10 +2439,7 @@ export default function RestaurantDashboard() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  restaurantRejectOrder(rejectOrderId, rejectReason);
-                  setRejectOrderId(null);
-                }}
+                onClick={handleConfirmRejectOrder}
                 style={{
                   flex: 1,
                   padding: '10px 0',

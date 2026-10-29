@@ -64,6 +64,7 @@ interface PlatformContextType {
   restaurantRejectOrder: (orderId: string, reason?: string) => void;
   restaurantMarkReady: (orderId: string) => void;
   riderAcceptOrder: (orderId: string, riderInfo?: { name: string; phone: string; vehicle: string }) => void;
+  riderRejectOrder: (orderId: string, reason?: string) => void;
   riderConfirmPickup: (orderId: string, enteredCode: string) => { success: boolean; message: string };
   riderDeliverOrder: (orderId: string, enteredOtp: string) => { success: boolean; message: string };
   customerRateOrder: (orderId: string, foodRating: number, riderRating: number, review: string) => void;
@@ -174,6 +175,19 @@ const DEFAULT_ADDRESSES: SavedAddress[] = [
   },
 ];
 
+const broadcastPlatformSync = (key: string, data: unknown) => {
+  if (typeof window === 'undefined') return;
+  try {
+    if (typeof BroadcastChannel !== 'undefined') {
+      const bc = new BroadcastChannel('pakka_platform_sync');
+      bc.postMessage({ key, data });
+      bc.close();
+    }
+  } catch {
+    // broadcast channel fallback
+  }
+};
+
 export function PlatformProvider({ children }: { children: React.ReactNode }) {
   // State initialization
   const [orders, setOrders] = useState<Order[]>(SAMPLE_ORDERS);
@@ -241,11 +255,74 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Sync state to localStorage on updates
+  // Cross-tab real-time state synchronization (BroadcastChannel + Storage event)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleSync = (key: string, data: unknown) => {
+      if (key === STORAGE_KEYS.ORDERS && Array.isArray(data)) {
+        setOrders(data);
+      } else if (key === STORAGE_KEYS.RESTAURANTS && Array.isArray(data)) {
+        setRestaurants(data);
+      } else if (key === STORAGE_KEYS.MENU_ITEMS && Array.isArray(data)) {
+        setMenuItems(data);
+      } else if (key === STORAGE_KEYS.ZONES && Array.isArray(data)) {
+        setZones(data);
+      } else if (key === STORAGE_KEYS.COUPONS && Array.isArray(data)) {
+        setCoupons(data);
+      } else if (key === STORAGE_KEYS.ADDRESSES && Array.isArray(data)) {
+        setSavedAddresses(data);
+      } else if (key === STORAGE_KEYS.RATINGS && typeof data === 'object') {
+        setRatings(data);
+      } else if (key === STORAGE_KEYS.RIDER_CASH) {
+        setRiderCashInHand(Number(data));
+      } else if (key === STORAGE_KEYS.RIDER_DUTY) {
+        setIsRiderOnDuty(data === true || data === 'true');
+      } else if (key === STORAGE_KEYS.SETTINGS && typeof data === 'object') {
+        setPlatformSettings(data);
+        if (data.surge_pricing_active !== undefined) setSurgePricing(data.surge_pricing_active);
+        if (data.surge_fee !== undefined) setSurgeFeeAmount(data.surge_fee);
+      } else if (key === STORAGE_KEYS.PILOTS && Array.isArray(data)) {
+        setPilots(data);
+      }
+    };
+
+    let bc: BroadcastChannel | null = null;
+    try {
+      if (typeof BroadcastChannel !== 'undefined') {
+        bc = new BroadcastChannel('pakka_platform_sync');
+        bc.onmessage = (event) => {
+          if (event.data?.key && event.data?.data) {
+            handleSync(event.data.key, event.data.data);
+          }
+        };
+      }
+    } catch {}
+
+    const handleStorageEvent = (e: StorageEvent) => {
+      if (!e.key || !e.newValue) return;
+      try {
+        const parsed = JSON.parse(e.newValue);
+        handleSync(e.key, parsed);
+      } catch {
+        handleSync(e.key, e.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageEvent);
+
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener('storage', handleStorageEvent);
+    };
+  }, []);
+
+  // Sync state to localStorage on updates and broadcast across tabs
   useEffect(() => {
     if (!isInitialized) return;
     try {
       localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
+      broadcastPlatformSync(STORAGE_KEYS.ORDERS, orders);
     } catch (e) { console.error(e); }
   }, [orders, isInitialized]);
 
@@ -370,57 +447,79 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       items: orderData.items,
     };
 
-    setOrders(prev => [newOrder, ...prev]);
+    setOrders(prev => {
+      const updated = [newOrder, ...prev];
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
     return newOrder;
   }, []);
 
   const restaurantAcceptOrder = useCallback((orderId: string) => {
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
-              status: 'preparing',
+              status: 'preparing' as const,
               accepted_at: new Date().toISOString(),
               preparing_at: new Date().toISOString(),
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
   }, []);
 
   const restaurantRejectOrder = useCallback((orderId: string, reason?: string) => {
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
-              status: 'cancelled',
+              status: 'cancelled' as const,
               cancelled_at: new Date().toISOString(),
-              special_instructions: `${o.special_instructions} [Rejected: ${reason || 'Kitchen overloaded'}]`.trim(),
+              special_instructions: `${o.special_instructions || ''} [Rejected: ${reason || 'Kitchen overloaded'}]`.trim(),
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
   }, []);
 
   const restaurantMarkReady = useCallback((orderId: string) => {
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
-              status: 'ready_for_pickup',
+              status: 'ready_for_pickup' as const,
               ready_at: new Date().toISOString(),
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
   }, []);
 
   const riderAcceptOrder = useCallback((orderId: string, riderInfo?: { name: string; phone: string; vehicle: string }) => {
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
@@ -430,8 +529,32 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
               rider_vehicle: riderInfo?.vehicle || 'Bajaj Pulsar AP 05 AB 1234',
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
+  }, []);
+
+  const riderRejectOrder = useCallback((orderId: string, reason?: string) => {
+    setOrders(prev => {
+      const updated = prev.map(o =>
+        o.id === orderId
+          ? {
+              ...o,
+              rider_declined: true,
+              special_instructions: `${o.special_instructions || ''} [Rider Declined: ${reason || 'Rider busy'}]`.trim(),
+            }
+          : o
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
   }, []);
 
   const riderConfirmPickup = useCallback((orderId: string, enteredCode: string) => {
@@ -441,12 +564,12 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       return { success: false, message: 'Invalid pickup code. Check with kitchen.' };
     }
 
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
-              status: 'out_for_delivery',
+              status: 'out_for_delivery' as const,
               picked_up_at: new Date().toISOString(),
               rider_id: 'demo-rider-001',
               rider_name: 'Venkat Reddy',
@@ -454,8 +577,13 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
               rider_vehicle: 'Bajaj Pulsar AP 05 AB 1234',
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
     return { success: true, message: 'Pickup confirmed! Food is on the way.' };
   }, [orders]);
 
@@ -466,17 +594,22 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
       return { success: false, message: 'Incorrect OTP! Ask customer for 4-digit code.' };
     }
 
-    setOrders(prev =>
-      prev.map(o =>
+    setOrders(prev => {
+      const updated = prev.map(o =>
         o.id === orderId
           ? {
               ...o,
-              status: 'delivered',
+              status: 'delivered' as const,
               delivered_at: new Date().toISOString(),
             }
           : o
-      )
-    );
+      );
+      try {
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+        broadcastPlatformSync(STORAGE_KEYS.ORDERS, updated);
+      } catch {}
+      return updated;
+    });
 
     // If COD, add to rider cash float
     setRiderCashInHand(prev => prev + target.total_amount);
@@ -773,6 +906,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         restaurantRejectOrder,
         restaurantMarkReady,
         riderAcceptOrder,
+        riderRejectOrder,
         riderConfirmPickup,
         riderDeliverOrder,
         customerRateOrder,

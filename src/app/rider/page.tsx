@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '@/lib/i18n/context';
 import { usePlatform } from '@/lib/store/platform-store';
+import { orderSound } from '@/lib/audio/order-sound';
 import Link from 'next/link';
 
 export default function RiderDashboard() {
   const { locale } = useTranslation();
   const {
     orders,
-    restaurants,
     riderCashInHand,
     riderDepositCash,
     isRiderOnDuty,
     toggleRiderDuty,
     riderAcceptOrder,
+    riderRejectOrder,
     riderConfirmPickup,
     riderDeliverOrder,
   } = usePlatform();
@@ -27,6 +28,7 @@ export default function RiderDashboard() {
   const [enteredDeliveryOtp, setEnteredDeliveryOtp] = useState<string>('');
   const [codeError, setCodeError] = useState<string>('');
   const [successCelebration, setSuccessCelebration] = useState<boolean>(false);
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
   // Cash deposit modal
   const [showDepositModal, setShowDepositModal] = useState<boolean>(false);
@@ -42,10 +44,37 @@ export default function RiderDashboard() {
     )
   );
 
-  // Available gigs: orders that need a rider (status in 'confirmed', 'preparing', 'ready_for_pickup' without a rider assigned)
+  // Available gigs: orders that need a rider (newly placed, cooking, or ready without rider assigned, excluding declined)
   const availableGigs = orders.filter(
-    o => !o.rider_name && (o.status === 'confirmed' || o.status === 'preparing' || o.status === 'ready_for_pickup')
+    o => !o.rider_name && !o.rider_declined && (
+      o.status === 'placed' ||
+      o.status === 'confirmed' ||
+      o.status === 'preparing' ||
+      o.status === 'ready_for_pickup'
+    )
   );
+
+  // Sound loop management: loops continuously until Accept or Reject is pressed
+  useEffect(() => {
+    const unlock = () => orderSound.unlockAudio();
+    window.addEventListener('click', unlock, { once: true });
+    window.addEventListener('touchstart', unlock, { once: true });
+    return () => {
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isRiderOnDuty && !activeDelivery && availableGigs.length > 0 && soundEnabled) {
+      orderSound.startAlertLoop();
+    } else {
+      orderSound.stopAlertLoop();
+    }
+    return () => {
+      orderSound.stopAlertLoop();
+    };
+  }, [isRiderOnDuty, activeDelivery, availableGigs.length, soundEnabled]);
 
   // Completed deliveries for this rider
   const completedDeliveries = orders.filter(
@@ -57,6 +86,7 @@ export default function RiderDashboard() {
 
   // Handle Accept Delivery Gig
   const handleAcceptGig = (orderId: string) => {
+    orderSound.stopAlertLoop();
     riderAcceptOrder(orderId, {
       name: 'Venkat Reddy',
       phone: '+91 98765 43210',
@@ -66,6 +96,15 @@ export default function RiderDashboard() {
     setEnteredDeliveryOtp('');
     setCodeError('');
     setSuccessCelebration(false);
+  };
+
+  // Handle Decline / Reject Delivery Gig
+  const handleRejectGig = (orderId: string) => {
+    riderRejectOrder(orderId, 'Rider declined gig');
+    const remaining = availableGigs.filter(g => g.id !== orderId);
+    if (remaining.length === 0) {
+      orderSound.stopAlertLoop();
+    }
   };
 
   // Handle Verify Pickup Code
@@ -203,6 +242,57 @@ export default function RiderDashboard() {
           <span>🏦 Deposit at Hub</span>
         </button>
       </div>
+
+      {/* Real-time Incoming Gig Ringing Alert Banner */}
+      {!activeDelivery && availableGigs.length > 0 && isRiderOnDuty && (
+        <div style={{
+          background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+          color: '#fff',
+          borderRadius: 14,
+          padding: '14px 20px',
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 12,
+          boxShadow: '0 8px 24px rgba(5,150,105,0.3)',
+          border: '2px solid #a7f3d0',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: '1.8rem' }}>🔔</span>
+            <div>
+              <div style={{ fontSize: '1rem', fontWeight: 900, letterSpacing: '0.01em' }}>
+                {availableGigs.length} DELIVERY GIG{availableGigs.length > 1 ? 'S' : ''} NEARBY — RINGING LIVE
+              </div>
+              <div style={{ fontSize: '0.78rem', opacity: 0.95, marginTop: 2 }}>
+                Ringtone will continuously loop until you press Accept or Decline.
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => {
+                orderSound.unlockAudio();
+                setSoundEnabled(!soundEnabled);
+              }}
+              style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                padding: '6px 14px',
+                borderRadius: 20,
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+              }}
+            >
+              {soundEnabled ? '🔔 Sound: ON' : '🔕 Mute Sound'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div style={{
@@ -832,22 +922,40 @@ export default function RiderDashboard() {
                           </div>
                         </div>
 
-                        <button
-                          onClick={() => handleAcceptGig(gig.id)}
-                          style={{
-                            background: 'linear-gradient(135deg, #059669, #047857)',
-                            color: '#fff',
-                            border: 'none',
-                            padding: '10px 18px',
-                            borderRadius: 10,
-                            fontSize: '0.84rem',
-                            fontWeight: 800,
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 12px rgba(5,150,105,0.25)',
-                          }}
-                        >
-                          Accept Gig →
-                        </button>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <button
+                            onClick={() => handleRejectGig(gig.id)}
+                            style={{
+                              background: '#fff',
+                              color: '#dc2626',
+                              border: '1.5px solid #fca5a5',
+                              padding: '10px 14px',
+                              borderRadius: 10,
+                              fontSize: '0.82rem',
+                              fontWeight: 800,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            ✕ Decline
+                          </button>
+
+                          <button
+                            onClick={() => handleAcceptGig(gig.id)}
+                            style={{
+                              background: 'linear-gradient(135deg, #059669, #047857)',
+                              color: '#fff',
+                              border: 'none',
+                              padding: '10px 18px',
+                              borderRadius: 10,
+                              fontSize: '0.84rem',
+                              fontWeight: 800,
+                              cursor: 'pointer',
+                              boxShadow: '0 4px 12px rgba(5,150,105,0.25)',
+                            }}
+                          >
+                            Accept Gig →
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
